@@ -1,0 +1,283 @@
+/* ── CSS Variables driven by brand config ── */
+:root {
+  --primary: #22c55e;
+  --accent: #8b5cf6;
+  --bg: #ffffff;
+  --bg-alt: #f8f9fa;
+  --fg: #111827;
+  --fg-muted: #6b7280;
+  --border: #e5e7eb;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Blob palette */
+  --aqua:    #7FDBFF;
+  --blue:    #0074D9;
+  --navy:    #001F3F;
+  --teal:    #39CCCC;
+  --green:   #2ECC40;
+  --olive:   #3D9970;
+  --lime:    #01FF70;
+  --yellow:  #FFDC00;
+  --orange:  #FF851B;
+  --red:     #FF4136;
+  --fuchsia: #F012BE;
+  --purple:  #B10DC9;
+  --maroon:  #85144B;
+  --white:   #FFFFFF;
+  --silver:  #DDDDDD;
+  --gray:    #AAAAAA;
+  --black:   #111111;
+}
+
+/* CUSTOMIZE: Override theme.css for dark mode or brand-specific colors */
+
+*, *::after, *::before { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  background: #111;
+  height: 100%;
+}
+
+body {
+  background: #111;
+  color: var(--fg);
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Responsive: mobile menu */
+@media (max-width: 768px) {
+  .desktop-nav { display: none !important; }
+  .mobile-menu-btn { display: block !important; }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   BLOB ANIMATION — pixel-perfect clone
+   ═══════════════════════════════════════════════════ */
+
+.blob-page {
+  width: 100%;
+  height: 100vh;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.stack {
+  display: grid;
+  grid-template-areas: 'stack';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blobs {
+  display: grid;
+  grid-template-areas: 'stack';
+  position: relative;
+  animation: spin infinite 5s linear;
+}
+
+.blob {
+  --border-radius: 115% 140% 145% 110% / 125% 140% 110% 125%;
+  --border-width: 5vmin;
+
+  aspect-ratio: 1;
+  display: block;
+  grid-area: stack;
+  background-size: calc(100% + var(--border-width) * 2);
+  background-repeat: no-repeat;
+  background-position: center;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--border-radius, 50%);
+  mask-image:
+    linear-gradient(transparent, transparent),
+    linear-gradient(black, white);
+  mask-clip: padding-box, border-box;
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(transparent, transparent),
+    linear-gradient(black, white);
+  -webkit-mask-clip: padding-box, border-box;
+  -webkit-mask-composite: source-in;
+  mix-blend-mode: screen;
+  height: 80vmin;
+  filter: blur(1vmin);
+}
+
+.blob:nth-child(1) {
+  background-color: var(--blue);
+  background-image: linear-gradient(var(--blue), var(--teal), var(--blue));
+  rotate: 30deg;
+  scale: 1.03;
+}
+
+.blob:nth-child(2) {
+  background-color: var(--red);
+  background-image: linear-gradient(var(--red), var(--orange), var(--red));
+  rotate: 60deg;
+  scale: 0.95;
+}
+
+.blob:nth-child(3) {
+  background-color: var(--olive);
+  background-image: linear-gradient(var(--olive), var(--lime), var(--olive));
+  rotate: 90deg;
+  scale: 0.97;
+}
+
+.blob:nth-child(4) {
+  background-color: var(--purple);
+  background-image: linear-gradient(var(--purple), var(--maroon), var(--purple));
+  rotate: 120deg;
+  scale: 1.02;
+}
+
+@keyframes spin {
+  from { rotate: 0deg; }
+  to   { rotate: 360deg; }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   iOS DIGITAL WATCH FACE
+   ═══════════════════════════════════════════════════ */
+
+.watch-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.watch-ring {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.watch-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 20px;
+}
+
+.watch-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watch-type {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.watch-count {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-weight: 700;
+  font-size: 32px;
+  color: #ffffff;
+  line-height: 1;
+  margin: 4px 0;
+}
+
+.watch-count-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.watch-status {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  color: #2ECC40;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.watch-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2ECC40;
+  animation: watchPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes watchPulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 4px #2ECC40;
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 8px #2ECC40;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — watch + blobs
+   ═══════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .watch-ring {
+    width: 180px;
+    height: 180px;
+  }
+  .watch-name {
+    font-size: 15px;
+    max-width: 130px;
+  }
+  .watch-count {
+    font-size: 26px;
+  }
+}
