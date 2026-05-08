@@ -50,10 +50,9 @@
   flex-shrink: 0;
 }
 
-/* Status info inside the sidebar pill — scales with viewport so the time
-   stays legible at every desktop width. */
+/* Status info inside the sidebar pill */
 .cp-sb-time {
-  font-size: clamp(13px, calc(11px + 0.3vw), 18px) !important;
+  font-size: 16px !important;
   font-weight: 700 !important;
   letter-spacing: .2px !important;
   font-variant-numeric: tabular-nums !important;
@@ -76,28 +75,30 @@
 }
 
 /* Sidebar wrapper — floats on top of the content column.
-   Continuously scales with viewport width in desktop range using clamp()
-   so the floating-island matches the proportional growth of cp-icon-square
-   (which already uses clamp(90px, 12vw, 140px)). Without this the sidebar
-   stayed pinned at 78px from 901px → ∞ while the icons grew, producing a
-   visibly mismatched dashboard at large desktop widths. The 64px floor
-   matches the @media(max-width:900px) compact rule below; the 110px ceiling
-   prevents the pill from dwarfing the dock icons on ultra-wide monitors. */
+   Identical fixed sizing to AdminCarPlay.css so the deployed sidebar is a
+   1:1 visual match of the admin sidebar at every viewport. The @media
+   chain below provides the same 900/640/360 breakpoint behaviour the
+   admin uses. Continuous-scaling clamp() was tried but produced a sidebar
+   that diverged from admin on wide desktops — reverted to fixed. */
 .cp-sidebar {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  width: clamp(64px, calc(50px + 3vw), 110px) !important;
+  width: 78px !important;
   flex-shrink: 0 !important;
-  padding: clamp(6px, 0.6vw, 12px) 0 clamp(6px, 0.6vw, 12px) clamp(4px, 0.4vw, 8px) !important;
+  padding: 8px 0 8px 6px !important;
   position: relative !important;
   z-index: 10 !important;
   align-self: stretch;
 }
 
-/* Floating glassy pill that holds the dock. Padding / gap / border-radius
-   scale with viewport via clamp() so the pill keeps proportions as the
-   sidebar widens on large desktops. */
+/* Floating glassy pill that holds the dock. Identical to admin's .cp-dock
+   except: background opacity bumped from .65 → .82 and border opacity
+   .08 → .16 so the pill stays visible against a near-black wallpaper.
+   In admin the pill sits over a brand-image wallpaper (high contrast) so
+   .65/.08 reads fine; the deployed cpdp-root uses solid #0a0a0a where the
+   .65 pill blends invisibly. The bumped values make the floating-island
+   read clearly without changing dimensions or breaking admin parity. */
 .cp-dock {
   display: flex !important;
   flex-direction: column !important;
@@ -105,14 +106,14 @@
   flex: 1 !important;
   min-height: 0 !important;
   width: 100% !important;
-  padding: clamp(8px, calc(6px + 0.3vw), 14px) clamp(4px, calc(2px + 0.25vw), 8px) clamp(12px, calc(8px + 0.4vw), 18px) !important;
-  background: rgba(30, 30, 32, .65) !important;
+  padding: 10px 6px 14px !important;
+  background: rgba(38, 38, 42, .82) !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-  border: 1.5px solid rgba(255, 255, 255, .08) !important;
-  gap: clamp(4px, calc(2px + 0.3vw), 10px) !important;
-  border-radius: clamp(20px, calc(16px + 0.5vw), 32px) !important;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04) !important;
+  border: 1.5px solid rgba(255, 255, 255, .16) !important;
+  gap: 6px !important;
+  border-radius: 24px !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -134,23 +135,24 @@
   justify-content: center !important;
 }
 .cp-dock-divider {
-  width: clamp(36px, calc(28px + 1.5vw), 70px) !important;
+  width: 44px !important;
   height: 1px !important;
-  background: rgba(255, 255, 255, .1) !important;
+  background: rgba(255, 255, 255, .14) !important;
   margin: 2px 0 !important;
   flex-shrink: 0 !important;
 }
-/* Dock buttons + icon wraps continuously scale alongside .cp-sidebar so the
-   pill's interior keeps proportions at every desktop width. Floor values
-   match the @media(max-width:900px) overrides; ceiling values give large
-   monitors visible breathing room. */
+/* Dock buttons + icon wraps — identical to AdminCarPlay.css fixed values
+   so the deployed sidebar is a 1:1 match of admin at every desktop width.
+   The @media(max-width:900px) block below mirrors admin's compact rules
+   for narrower viewports; @media(max-width:640px) and (max-width:360px)
+   provide grid responsiveness. */
 .cp-dock-btn {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: clamp(50px, calc(38px + 1.4vw), 72px) !important;
-  height: clamp(50px, calc(38px + 1.4vw), 72px) !important;
-  border-radius: clamp(12px, calc(10px + 0.3vw), 18px) !important;
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 14px !important;
   cursor: pointer !important;
   transition: all .15s !important;
   position: relative !important;
@@ -164,14 +166,14 @@
 .cp-dock-btn:active { transform: scale(.88) !important; }
 
 .cp-dock-icon-wrap {
-  width: clamp(42px, calc(32px + 1.1vw), 60px) !important;
-  height: clamp(42px, calc(32px + 1.1vw), 60px) !important;
-  min-width: clamp(42px, calc(32px + 1.1vw), 60px) !important;
-  min-height: clamp(42px, calc(32px + 1.1vw), 60px) !important;
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: clamp(11px, calc(9px + 0.3vw), 16px) !important;
+  border-radius: 13px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .35) !important;
   overflow: hidden !important;
 }
@@ -191,14 +193,14 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .3)) !important;
 }
 .cp-dock-home-icon {
-  width: clamp(42px, calc(32px + 1.1vw), 60px) !important;
-  height: clamp(42px, calc(32px + 1.1vw), 60px) !important;
+  width: 46px !important;
+  height: 46px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   background: rgba(255, 255, 255, .06) !important;
   border: 1px solid rgba(255, 255, 255, .08) !important;
-  border-radius: clamp(11px, calc(9px + 0.3vw), 16px) !important;
+  border-radius: 13px !important;
 }
 .cp-dock-home-icon svg { stroke: #fff !important; }
 
