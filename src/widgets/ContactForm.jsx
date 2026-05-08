@@ -63,8 +63,10 @@ export default function ContactForm({
 
   return (
     <div style={{
-      borderRadius: 28,
-      padding: 'clamp(22px, 3.4vw, 32px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(18px, 3.4cqi, 32px)',
       background: 'rgba(255,255,255,0.04)',
       backdropFilter: 'blur(28px) saturate(160%)',
       WebkitBackdropFilter: 'blur(28px) saturate(160%)',
@@ -72,11 +74,10 @@ export default function ContactForm({
       boxShadow: '0 12px 40px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.06)',
       color: textColor,
       display: 'flex', flexDirection: 'column', gap: 18,
-      maxWidth: 560,
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <h3 style={{ margin: 0, fontSize: 'clamp(20px, 2.4vw, 28px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>
-        {subtitle && <span style={{ fontSize: 13, opacity: 0.65 }}>{subtitle}</span>}
+        <h3 style={{ margin: 0, fontSize: 'clamp(18px, 3.2cqi, 28px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>
+        {subtitle && <span style={{ fontSize: 'clamp(12px, 1.5cqi, 14px)', opacity: 0.65 }}>{subtitle}</span>}
       </div>
 
       {state === 'sent' ? (

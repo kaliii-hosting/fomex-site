@@ -34,8 +34,10 @@ export default function ImageGallerySlider({
 
   return (
     <div style={{
-      borderRadius: 28,
-      padding: 'clamp(18px, 2.6vw, 24px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(14px, 2.8cqi, 24px)',
       background: 'rgba(255,255,255,0.04)',
       backdropFilter: 'blur(28px) saturate(160%)',
       WebkitBackdropFilter: 'blur(28px) saturate(160%)',
@@ -46,8 +48,8 @@ export default function ImageGallerySlider({
     }}>
       {(title || subtitle) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {title && <h3 style={{ margin: 0, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>}
-          {subtitle && <span style={{ fontSize: 13, opacity: 0.65 }}>{subtitle}</span>}
+          {title && <h3 style={{ margin: 0, fontSize: 'clamp(17px, 2.6cqi, 24px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>}
+          {subtitle && <span style={{ fontSize: 'clamp(12px, 1.4cqi, 13px)', opacity: 0.65 }}>{subtitle}</span>}
         </div>
       )}
 

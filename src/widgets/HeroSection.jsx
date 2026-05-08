@@ -24,9 +24,11 @@ export default function HeroSection({
   return (
     <div style={{
       position: 'relative',
-      borderRadius: 28,
-      padding: 'clamp(24px, 4vw, 40px)',
-      minHeight: 'clamp(260px, 32vw, 420px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(20px, 4cqi, 40px)',
+      minHeight: 'clamp(220px, 32cqi, 420px)',
       overflow: 'hidden',
       isolation: 'isolate',
       background: backgroundImage
@@ -82,13 +84,13 @@ export default function HeroSection({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: '720px' }}>
         <h2 style={{
           margin: 0,
-          fontSize: 'clamp(28px, 4.4vw, 56px)',
-          fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.05,
+          fontSize: 'clamp(22px, 5.4cqi, 56px)',
+          fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.08,
           textShadow: '0 2px 16px rgba(0,0,0,0.25)',
         }}>{headline}</h2>
         <p style={{
           margin: 0,
-          fontSize: 'clamp(14px, 1.4vw, 18px)',
+          fontSize: 'clamp(13px, 1.6cqi, 18px)',
           lineHeight: 1.5, opacity: 0.85,
           maxWidth: '60ch',
         }}>{subtitle}</p>

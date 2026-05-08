@@ -58,8 +58,10 @@ export default function FooterCompanyInfo({
 
   return (
     <footer style={{
-      borderRadius: 28,
-      padding: 'clamp(24px, 3.4vw, 36px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(20px, 3.6cqi, 36px)',
       background: 'rgba(8,8,12,0.55)',
       backdropFilter: 'blur(28px) saturate(160%)',
       WebkitBackdropFilter: 'blur(28px) saturate(160%)',
@@ -71,13 +73,13 @@ export default function FooterCompanyInfo({
       {/* Top — brand + columns + newsletter */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(220px, 1.4fr) repeat(auto-fit, minmax(140px, 1fr))',
-        gap: 32,
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 100%), 1fr))',
+        gap: 'clamp(20px, 3cqi, 32px)',
       }}>
         {/* Brand block */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <span style={{
-            fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em',
+            fontSize: 'clamp(20px, 3.4cqi, 26px)', fontWeight: 800, letterSpacing: '-0.02em',
             backgroundImage: `linear-gradient(135deg, ${textColor}, ${accent})`,
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             backgroundClip: 'text', color: 'transparent',

@@ -40,8 +40,10 @@ export default function FeaturesGrid({
 }) {
   return (
     <div style={{
-      borderRadius: 28,
-      padding: 'clamp(20px, 3.2vw, 32px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(18px, 3.6cqi, 32px)',
       background: 'rgba(255,255,255,0.04)',
       backdropFilter: 'blur(28px) saturate(160%)',
       WebkitBackdropFilter: 'blur(28px) saturate(160%)',
@@ -52,16 +54,16 @@ export default function FeaturesGrid({
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxWidth: 640 }}>
         <h3 style={{
-          margin: 0, fontSize: 'clamp(20px, 2.6vw, 30px)',
+          margin: 0, fontSize: 'clamp(18px, 3.2cqi, 30px)',
           fontWeight: 700, letterSpacing: '-0.015em', lineHeight: 1.15,
         }}>{title}</h3>
         {subtitle && (
-          <p style={{ margin: 0, fontSize: 'clamp(13px, 1.2vw, 15px)', opacity: 0.7, lineHeight: 1.55 }}>{subtitle}</p>
+          <p style={{ margin: 0, fontSize: 'clamp(12px, 1.5cqi, 15px)', opacity: 0.7, lineHeight: 1.55 }}>{subtitle}</p>
         )}
       </div>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))',
         gap: 14,
       }}>
         {items.map((it, i) => (

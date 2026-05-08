@@ -54,8 +54,10 @@ export default function AnalyticsStats({
 }) {
   return (
     <div style={{
-      borderRadius: 28,
-      padding: 'clamp(20px, 3vw, 28px)',
+      width: '100%',
+      containerType: 'inline-size',
+      borderRadius: 'clamp(20px, 2.4cqi, 28px)',
+      padding: 'clamp(16px, 3.2cqi, 28px)',
       background: 'rgba(255,255,255,0.04)',
       backdropFilter: 'blur(28px) saturate(160%)',
       WebkitBackdropFilter: 'blur(28px) saturate(160%)',
@@ -66,8 +68,8 @@ export default function AnalyticsStats({
     }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <h3 style={{ margin: 0, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>
-          {subtitle && <span style={{ fontSize: 12, opacity: 0.65 }}>{subtitle}</span>}
+          <h3 style={{ margin: 0, fontSize: 'clamp(17px, 2.6cqi, 24px)', fontWeight: 700, letterSpacing: '-0.015em' }}>{title}</h3>
+          {subtitle && <span style={{ fontSize: 'clamp(11px, 1.3cqi, 12px)', opacity: 0.65 }}>{subtitle}</span>}
         </div>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -81,7 +83,7 @@ export default function AnalyticsStats({
       </div>
 
       {/* KPI tiles */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(140px, 100%), 1fr))', gap: 10 }}>
         {kpis.map(k => (
           <div key={k.id} style={{
             position: 'relative',
@@ -98,7 +100,7 @@ export default function AnalyticsStats({
               filter: 'blur(8px)',
             }} />
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', opacity: 0.65 }}>{k.label}</span>
-            <span style={{ fontSize: 'clamp(20px, 2vw, 24px)', fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.015em' }}>{k.value}</span>
+            <span style={{ fontSize: 'clamp(18px, 3.2cqi, 26px)', fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.015em' }}>{k.value}</span>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 4,
               alignSelf: 'flex-start',
