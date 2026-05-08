@@ -86,46 +86,69 @@ function Sidebar() {
   )
 }
 
-export default function CarPlayDashboard({ above = [], below = [] }) {
+// Mirrors the admin's AdminCarPlay shell structure: cp-root → cp-wallpaper +
+// cp-main → cp-sidebar + cp-content. The wallpaper element is what the
+// floating-island pill sits on top of; without it the deployed dashboard
+// rendered against pure black, making the .cp-dock blend invisibly into
+// the wallpaper. Inline backgroundImage allows per-deployment override
+// (mirrors how AdminCarPlay's Settings → Background tab swaps it live).
+export default function CarPlayDashboard({ above = [], below = [], wallpaperUrl, wallpaperType = 'image' }) {
+  const wpStyle = wallpaperUrl
+    ? { backgroundImage: `url('${wallpaperUrl}')` }
+    : undefined
   return (
-    <div className="cpdp-root">
-      <Sidebar />
-      <div className="cpdp-content">
-        {above.length > 0 && (
-          <div className="cpdp-zone">
-            {above.map((w, i) => (
-              <WidgetRenderer key={w.id || `above-${i}`} widget={w} />
-            ))}
-          </div>
+    <div className="cp-root">
+      <div className="cp-wallpaper" style={wpStyle}>
+        {wallpaperType === 'video' && wallpaperUrl && (
+          <video
+            className="cp-wallpaper-video"
+            src={wallpaperUrl}
+            muted
+            autoPlay
+            loop
+            playsInline
+          />
         )}
+      </div>
+      <div className="cp-main">
+        <Sidebar />
+        <div className="cpdp-content">
+          {above.length > 0 && (
+            <div className="cpdp-zone">
+              {above.map((w, i) => (
+                <WidgetRenderer key={w.id || `above-${i}`} widget={w} />
+              ))}
+            </div>
+          )}
 
-        <div className="cpdp-grid-frame">
-          <div className="cp-icon-grid cpdp-grid">
-            {PREVIEW_APPS.map(app => (
-              <button key={app.id} type="button" className="cp-icon-btn" tabIndex={-1}>
-                <div className="cp-icon-square cp-icon-image">
-                  <img
-                    src={app.src}
-                    alt={app.name}
-                    width="100%"
-                    height="100%"
-                    draggable={false}
-                    style={{ objectFit: 'contain', display: 'block' }}
-                  />
-                </div>
-                <span className="cp-icon-label">{app.name}</span>
-              </button>
-            ))}
+          <div className="cpdp-grid-frame">
+            <div className="cp-icon-grid cpdp-grid">
+              {PREVIEW_APPS.map(app => (
+                <button key={app.id} type="button" className="cp-icon-btn" tabIndex={-1}>
+                  <div className="cp-icon-square cp-icon-image">
+                    <img
+                      src={app.src}
+                      alt={app.name}
+                      width="100%"
+                      height="100%"
+                      draggable={false}
+                      style={{ objectFit: 'contain', display: 'block' }}
+                    />
+                  </div>
+                  <span className="cp-icon-label">{app.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
+
+          {below.length > 0 && (
+            <div className="cpdp-zone">
+              {below.map((w, i) => (
+                <WidgetRenderer key={w.id || `below-${i}`} widget={w} />
+              ))}
+            </div>
+          )}
         </div>
-
-        {below.length > 0 && (
-          <div className="cpdp-zone">
-            {below.map((w, i) => (
-              <WidgetRenderer key={w.id || `below-${i}`} widget={w} />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

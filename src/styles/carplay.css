@@ -1,56 +1,106 @@
 /* ── carplay.css ──
-   Minimum CSS the deployed CarPlayDashboard needs. Extracted from the
-   admin repo's AdminCarPlay.css and un-scoped from the .wf-customer-detail
-   wrapper so rules apply at the deployed site root. Keep this in sync
-   when the admin sidebar/grid styling evolves.
+   Direct port of the admin AdminCarPlay.css sidebar/wallpaper/responsive
+   chain so the deployed CarPlay dashboard at e.g. fomex.palntier.com
+   renders identically to the admin's CarPlay shell at every viewport
+   width.
 
-   What's here:
-   - Full-viewport CarPlay frame (cpdp-root + cpdp-content)
-   - Floating sidebar pill (cp-sidebar + cp-dock + status + dock buttons)
-   - 5×2 app icon grid (cp-icon-grid + cp-icon-btn + cp-icon-square)
-   - Above/below widget zones (cpdp-zone)
-   - Responsive breakpoints at 900 / 640 / 360px
+   What's copied verbatim from admin (src/pages/AdminCarPlay.css, lines
+   1–75 and 677–798):
+   - Page reset + .cp-root fixed-positioned shell
+   - .cp-wallpaper absolute background-image layer (replaces the previous
+     "solid #0a0a0a" deployed wallpaper that made the floating-island
+     pill blend invisibly)
+   - .cp-main / .cp-content flex containers
+   - .cp-sidebar floating wrapper
+   - .cp-dock glassy pill
+   - All cp-dock-* dock buttons / status / icon-wrap / divider / spacer
+   - cp-dock-tab + cp-dock-tab-* (page-tab style buttons)
+   - 5×2 .cp-icon-grid + .cp-icon-square + .cp-icon-image + .cp-icon-label
+   - Full @media (max-width: 900/640/360) chain — same breakpoint values
+     and same property changes as admin uses
+   - Container queries on .cpdp-root so the deployed sidebar also
+     responds to its own width when embedded somewhere narrower (e.g.
+     iframe preview), matching the admin Builder preview behavior.
+
+   Anything tied to admin-only chrome (Customers detail .wf-customer-detail
+   wrapper, the cust-power-floating absolute dock, the SignOut button
+   styling, the Settings-page wallpaper editor) is intentionally NOT
+   carried over — the deployed site has none of those surfaces.
 */
 
-/* Page-root frame — black CarPlay backdrop fills the viewport so widgets
-   read against a dashboard surface, not the white default browser bg. */
-.cpdp-root {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: #0a0a0a;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+/* ─────────────────────────────────────────────────────────────────
+   Page-root reset. NOTE: we deliberately do NOT lock html/body/#root
+   overflow here (admin AdminCarPlay.css does, but the deployed site
+   is multi-route — the same lock would break Shop/About/Contact
+   scrolling). .cp-root uses position: fixed; inset: 0 to cover the
+   viewport on the home route only; when the user navigates to another
+   route, HomePage unmounts and the body scrolls normally again.
+   ───────────────────────────────────────────────────────────────── */
+.cp-root, .cp-root * {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
-.cpdp-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.cpdp-zone {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px 14px 4px;
-}
-.cpdp-grid-frame {
-  padding: 32px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cpdp-sidebar {
-  height: auto;
-  flex-shrink: 0;
+.cp-root {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+  background: #000 !important;
+  color: #fff !important;
+  overflow: clip !important;
+  user-select: none !important;
+  line-height: 1.25 !important;
+  /* Make .cp-root a CSS container so the sidebar's @container queries
+     below fire against the dashboard's own size, mirroring the admin
+     Builder preview's responsiveness contract. */
+  container-type: inline-size;
+  container-name: cproot;
 }
 
-/* Status info inside the sidebar pill */
+/* Wallpaper — absolute background-image layer, sits behind everything.
+   The default URL matches admin's default Palntier brand wallpaper.
+   Per-client/per-deployment customisation is wired up by setting the
+   `style.backgroundImage` inline on the .cp-wallpaper element from JSX
+   so the inline value beats this CSS without needing !important. */
+.cp-wallpaper {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background-image: url('https://fchtwxunzmkzbnibqbwl.supabase.co/storage/v1/object/public/kaliii/Palntier%20ICons/background%20hd.png');
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-color: #000 !important;
+  will-change: transform !important;
+  transform-origin: center center !important;
+  transform: scale(1.15) !important;
+  overflow: hidden !important;
+}
+.cp-wallpaper-video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+}
+.cp-root > *:not(.cp-wallpaper) {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Status info — used inside .cp-dock-status at the top of the sidebar pill */
 .cp-sb-time {
   font-size: 16px !important;
   font-weight: 700 !important;
@@ -74,12 +124,18 @@
   color: #fff !important;
 }
 
-/* Sidebar wrapper — floats on top of the content column.
-   Identical fixed sizing to AdminCarPlay.css so the deployed sidebar is a
-   1:1 visual match of the admin sidebar at every viewport. The @media
-   chain below provides the same 900/640/360 breakpoint behaviour the
-   admin uses. Continuous-scaling clamp() was tried but produced a sidebar
-   that diverged from admin on wide desktops — reverted to fixed. */
+/* Main flex row — sidebar + content. Full height, no top status bar
+   because the status bar lives inside the sidebar pill. */
+.cp-main {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  height: 100% !important;
+}
+
+/* Sidebar — padding wrapper around the floating pill */
 .cp-sidebar {
   display: flex !important;
   flex-direction: column !important;
@@ -89,16 +145,10 @@
   padding: 8px 0 8px 6px !important;
   position: relative !important;
   z-index: 10 !important;
-  align-self: stretch;
+  height: 100% !important;
 }
 
-/* Floating glassy pill that holds the dock. Identical to admin's .cp-dock
-   except: background opacity bumped from .65 → .82 and border opacity
-   .08 → .16 so the pill stays visible against a near-black wallpaper.
-   In admin the pill sits over a brand-image wallpaper (high contrast) so
-   .65/.08 reads fine; the deployed cpdp-root uses solid #0a0a0a where the
-   .65 pill blends invisibly. The bumped values make the floating-island
-   read clearly without changing dimensions or breaking admin parity. */
+/* Floating glassy pill that holds the dock content */
 .cp-dock {
   display: flex !important;
   flex-direction: column !important;
@@ -107,19 +157,20 @@
   min-height: 0 !important;
   width: 100% !important;
   padding: 10px 6px 14px !important;
-  background: rgba(38, 38, 42, .82) !important;
+  background: rgba(30, 30, 32, .65) !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-  border: 1.5px solid rgba(255, 255, 255, .16) !important;
+  border: 1.5px solid rgba(255, 255, 255, .08) !important;
   gap: 6px !important;
   border-radius: 24px !important;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04) !important;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .cp-dock::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
+/* Status block at top of pill */
 .cp-dock-status {
   display: flex !important;
   flex-direction: column !important;
@@ -134,18 +185,17 @@
   gap: 3px !important;
   justify-content: center !important;
 }
+
+/* Divider line inside the pill */
 .cp-dock-divider {
   width: 44px !important;
   height: 1px !important;
-  background: rgba(255, 255, 255, .14) !important;
+  background: rgba(255, 255, 255, .1) !important;
   margin: 2px 0 !important;
   flex-shrink: 0 !important;
 }
-/* Dock buttons + icon wraps — identical to AdminCarPlay.css fixed values
-   so the deployed sidebar is a 1:1 match of admin at every desktop width.
-   The @media(max-width:900px) block below mirrors admin's compact rules
-   for narrower viewports; @media(max-width:640px) and (max-width:360px)
-   provide grid responsiveness. */
+
+/* Dock buttons */
 .cp-dock-btn {
   display: flex !important;
   align-items: center !important;
@@ -164,6 +214,8 @@
 }
 .cp-dock-btn:hover { background: rgba(255, 255, 255, .07) !important; }
 .cp-dock-btn:active { transform: scale(.88) !important; }
+.cp-dock-active { background: none !important; }
+.cp-dock-active::after { display: none !important; }
 
 .cp-dock-icon-wrap {
   width: 46px !important;
@@ -204,7 +256,85 @@
 }
 .cp-dock-home-icon svg { stroke: #fff !important; }
 
-/* App icon grid — 5x2 large icons fill the content area */
+/* Dock-tab style buttons (page tabs / contextual buttons) — copied
+   verbatim from admin lines 680–686. Even though the deployed v1 has
+   no tab buttons, shipping the rules now means template forks that
+   add them inherit identical styling. */
+.cp-dock-tab {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 11px !important;
+  cursor: pointer !important;
+  border: none !important;
+  background: none !important;
+  color: rgba(255, 255, 255, .5) !important;
+  transition: all .2s ease !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+.cp-dock-tab:hover { color: rgba(255, 255, 255, .7) !important; background: rgba(255, 255, 255, .06) !important; }
+.cp-dock-tab:active { transform: scale(.88) !important; }
+.cp-dock-tab-active { color: #007AFF !important; background: rgba(255, 255, 255, .08) !important; }
+.cp-dock-tab-active:hover { color: #007AFF !important; background: rgba(255, 255, 255, .12) !important; }
+.cp-dock-tab-label {
+  font-size: 8px !important;
+  font-weight: 500 !important;
+  letter-spacing: -.1px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+.cp-dock-tab svg { display: block !important; flex-shrink: 0 !important; }
+
+/* ─────────────────────────────────────────────────────────────────
+   Content area — absolute-positioned to cover full area including
+   behind the sidebar, so the sidebar truly floats. The sidebar's
+   z-index: 10 keeps it on top of cpdp-content.
+   ───────────────────────────────────────────────────────────────── */
+.cpdp-root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+}
+.cpdp-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.cpdp-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 14px 4px;
+}
+.cpdp-grid-frame {
+  padding: 32px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cpdp-sidebar {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* App icon grid — same proportions as admin */
 .cp-icon-grid {
   display: grid !important;
   grid-template-columns: repeat(5, 1fr) !important;
@@ -280,7 +410,14 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, .6) !important;
 }
 
-/* Responsive */
+/* ═════════════════════════════════════════════════════════════════
+   RESPONSIVE — copied verbatim from admin AdminCarPlay.css lines
+   429–518. Same breakpoints (900 / 640 / 360), same property changes,
+   same compact mode. The deployed sidebar now responds to viewport
+   resize / browser zoom / device-mode the same way the admin sidebar
+   does.
+   ═════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 900px) {
   .cp-sidebar {
     width: 64px !important;
@@ -308,6 +445,12 @@
     height: 42px !important;
     border-radius: 11px !important;
   }
+  .cp-dock-tab {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 9px !important;
+  }
+  .cp-dock-tab-label { font-size: 7px !important; }
   .cp-dock-divider { width: 36px !important; }
 }
 
@@ -344,5 +487,87 @@
   .cp-icon-square {
     width: clamp(60px, 22vw, 78px) !important;
     height: clamp(60px, 22vw, 78px) !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   CONTAINER QUERIES — same breakpoints (900 / 640 / 360) but read
+   .cp-root's own width instead of the browser viewport. This makes
+   the deployed sidebar also respond when the dashboard is embedded
+   in a frame narrower than the browser (admin Builder preview, future
+   iframe embeds). Without these, an embedded narrow frame would keep
+   the desktop 78px sidebar even though the visible canvas is mobile-
+   sized — the same parity bug the admin Builder preview had.
+   ═════════════════════════════════════════════════════════════════ */
+
+@container cproot (max-width: 900px) {
+  .cp-sidebar {
+    width: 64px !important;
+    padding: 6px 0 6px 4px !important;
+  }
+  .cp-dock {
+    padding: 8px 4px 12px !important;
+    gap: 4px !important;
+    border-radius: 20px !important;
+  }
+  .cp-dock-btn {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 12px !important;
+  }
+  .cp-dock-icon-wrap {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    border-radius: 11px !important;
+  }
+  .cp-dock-home-icon {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 11px !important;
+  }
+  .cp-dock-tab {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 9px !important;
+  }
+  .cp-dock-tab-label { font-size: 7px !important; }
+  .cp-dock-divider { width: 36px !important; }
+}
+
+@container cproot (max-width: 640px) {
+  .cp-icon-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 18px 6px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .cp-icon-btn { min-width: 0 !important; gap: 6px !important; }
+  .cp-icon-square {
+    width: clamp(54px, 16cqw, 70px) !important;
+    height: clamp(54px, 16cqw, 70px) !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 16px !important;
+  }
+  .cp-icon-square::after { border-radius: 16px !important; }
+  .cp-icon-label {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+  }
+  .cpdp-grid-frame { padding: 20px 12px !important; }
+  .cpdp-zone { padding: 10px 10px 4px !important; }
+}
+
+@container cproot (max-width: 360px) {
+  .cp-icon-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px 12px !important;
+  }
+  .cp-icon-square {
+    width: clamp(60px, 22cqw, 78px) !important;
+    height: clamp(60px, 22cqw, 78px) !important;
   }
 }
